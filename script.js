@@ -3,6 +3,7 @@ let users;
 let currentPage = 0;
 let pageSize = 10;
 let cp = document.getElementById("cp");
+let totalPage = 100 / pageSize;
 
 fetch("https://raw.githubusercontent.com/Rajavasanthan/jsondata/master/pagenation.json")
   .then(res => res.json())
@@ -28,22 +29,27 @@ fetch("https://raw.githubusercontent.com/Rajavasanthan/jsondata/master/pagenatio
 
   function changePage(direction){
       
-    if(direction == 'next'){
-        tbody.innerHTML = '';
+    if(direction == 'next' && currentPage < totalPage -1){
         currentPage++;
-        cp.innerHTML = currentPage;
-
-        for(let i = currentPage * pageSize; i < currentPage * pageSize + pageSize; i++){
-            insertNewRow(users[i])
-        }   
+        printRecord();
     }
-    else if(direction == 'prev'){
-        tbody.innerHTML = '';
+    else if(direction == 'prev' && currentPage > 0){
         currentPage--;
-        cp.innerHTML = currentPage;
-        for(let i = currentPage * pageSize; i < currentPage * pageSize + pageSize; i++){
-            insertNewRow(users[i])
-        }
+        printRecord(); 
+    }
+    else if(direction == 'jump'){
+        currentPage = document.getElementById("search").value;
+        printRecord();
+    }else{
+        currentPage = direction;
+        printRecord();
     }
      
   } 
+  
+  function printRecord(){
+    tbody.innerHTML = '';
+    for(let i = currentPage * pageSize; i < currentPage * pageSize + pageSize; i++){
+        insertNewRow(users[i])
+    }
+  }
